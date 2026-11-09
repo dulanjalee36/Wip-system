@@ -1,0 +1,701 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UNIMAK (PVT) LTD -- COMPLETE WIP STOCK MANAGEMENT SYSTEM
+Master Prompt for Google AI Studio / Bolt.new / AI Web App Builders
+Build a complete, production-oriented, responsive web application named
+UNIMAK WIP STOCK MANAGEMENT SYSTEM for Unimak (Pvt) Ltd, a metal
+packaging manufacturing company.
+
+This is a real operational stock management application, not a demo.
+Follow every requirement below. Do not omit modules or invent business
+processes. If a requirement is ambiguous, ask before implementing it
+rather than silently assuming.
+
+1. TECHNOLOGY AND ARCHITECTURE
+Use: - React - TypeScript - Tailwind CSS - Supabase PostgreSQL
+database - Supabase Authentication - Supabase Row Level Security (RLS) -
+Recharts for dashboard charts - ExcelJS or an equivalent
+browser-compatible library for Excel exports - jsPDF or an equivalent
+browser-compatible library for PDF exports
+
+Do NOT use: - Python - Django - SQLite - Local-only browser storage as
+the main database - Hardcoded stock balances - Fake/demo transactions
+
+The application must work through a web browser on multiple computers.
+Keep the code modular, maintainable and suitable for future development.
+
+Use Supabase as the single source of truth. All important stock
+calculations and approval operations must be validated securely on the
+server/database side. Never expose Supabase service-role keys in
+frontend code.
+
+Create database migrations/schema, indexes, constraints, foreign keys,
+RLS policies and secure database functions/RPCs as needed. Use atomic
+database transactions for stock movements and approvals.
+
+2. APPLICATION DESIGN AND SIDEBAR
+Create a clean, modern, professional manufacturing-company interface.
+
+Application title: UNIMAK WIP STOCK MANAGEMENT SYSTEM
+
+Company: Unimak (Pvt) Ltd
+
+Use a professional dark-blue/white/grey theme, clear typography,
+readable tables, consistent spacing and suitable icons.
+
+The sidebar must contain these sections in this exact order:
+
+Dashboard
+Master Data
+Coating Receiving
+Issuing to Factories
+Quality Return
+Coating Stock Summary
+Printing Stock
+Settings
+Logout
+The sidebar must: - Be collapsible. - Work on desktop, tablet and
+mobile. - Highlight the active page. - Display the company name and logo
+area. - Show the logged-in user's name and role. - Hide or disable
+actions according to permissions, while also enforcing permissions on
+the backend.
+
+Do not add separate Quality Issue, Quality WIP, Production, or unrelated
+modules.
+
+3. USER AUTHENTICATION AND ROLES
+Use secure Supabase Authentication.
+
+Provide these roles:
+
+Administrator
+Full access to all modules.
+Manage master data.
+Create and manage users.
+Approve or return Quality Return submissions.
+View all reports and audit logs.
+Perform controlled corrections/reversals with reasons.
+Manage application settings.
+Quality Department
+Create Quality Return records.
+Save drafts and submit Quality Returns.
+View their own submissions and their approval status.
+Cannot approve their own submissions.
+Cannot create coating receipts or issue stock.
+Cannot edit master data.
+Cannot manage users or settings.
+Viewer
+Read-only access to Dashboard, permitted Master Data views, Coating
+Stock Summary, Printing Stock, batch details and reports.
+Cannot create, edit, approve or delete transactions.
+Can export reports only if the Administrator enables export
+permission.
+User management: - Administrator can create Quality Department and
+Viewer accounts. - Administrator can activate/deactivate accounts and
+initiate password resets. - Do not allow normal users to create
+Administrator accounts. - Do not hardcode credentials in frontend
+code. - Do not store passwords in plain text. - If an initial
+administrator account is required, create it through a secure setup
+process or Supabase Auth invitation/administrative provisioning. Do not
+expose a service-role key. - Record user creation, role changes,
+deactivation and relevant account activity in audit logs.
+
+Enforce roles and permissions with Supabase RLS and secure
+backend/database functions. Frontend-only permission hiding is not
+sufficient.
+
+4. DASHBOARD
+Create a useful operational dashboard with KPI cards and graphs. All
+values must come from real database records and update when transactions
+are approved or recorded.
+
+KPI cards
+Show: - Total Coating Received - Current Coating Stock - Total Issued to
+Printing Line - Total Issued to Other Factories - Current Printing WIP -
+Approved Good Printing Stock - Rejected Printing Stock - Total Good
+Sheets Returned - Total Rejected Sheets Returned - Total Final Factory
+Issues - Pending Quality Approvals - Active Jobs - Active Items - Active
+Printing Batches
+
+Use clear units and number formatting. Do not show fabricated figures.
+
+Graphs
+Include: - Item-wise Coating Stock - Item-wise Printing Stock - Coating
+Received vs Issued - Factory-wise Issued Quantity - Good vs Rejected
+Sheets - Monthly Stock Movement - Job-wise Stock Distribution -
+Rejection Trend over time
+
+Filters
+Provide: - Today - This Week - This Month - Custom Date Range - Job -
+Item - Stock category
+
+Dashboard cards and charts must respond to filters. Provide meaningful
+empty states when there is no data.
+
+5. MASTER DATA
+Create a Master Data module. Administrator can add, edit, deactivate and
+view master records.
+
+Manage:
+
+Jobs
+Job Number / Job Code
+Job Name
+Customer name (optional)
+Description (optional)
+Active / Inactive status
+Items
+Item Code (unique)
+Item Name
+Sheet Size
+Unit of Measure (default: Sheets)
+Description (optional)
+Active / Inactive status
+Sheet Sizes
+Examples for initial dropdown configuration only: - 0.20 × 710 × 910 -
+0.20 × 990 × 775 (W)
+
+These are configuration examples, not stock transactions. Administrator
+must be able to add more sizes.
+
+Coating Types
+Provide selectable coating types: - White - Size - Gold - LPVC - NPVC -
+Silver - Black
+
+Administrator must be able to add, edit or deactivate coating types.
+
+Side Configurations
+Single
+Double
+Factories / Departments
+Initial options: - Crown Line - Plant 2 - Plant 3 - Printing Line
+
+Allow Administrator to manage these options.
+
+Validation: - Prevent duplicate item codes. - Prevent duplicate job
+numbers. - Prevent invalid or inactive master records from being
+selected for new transactions. - Preserve historical transaction
+descriptions if a master record is later renamed or deactivated.
+
+6. COATING RECEIVING
+Create a Coating Receiving module to record sheets received after
+coating.
+
+Form fields
+Receiving Date
+Job Name / Job Number (dropdown)
+Coating Batch Card Number (required)
+Item Code (dropdown)
+Item Name (automatically populated)
+Sheet Size (dropdown, populated from Master Data)
+Coating Types (multi-select dropdown)
+Side Configuration (Single / Double)
+Received Quantity
+Remarks
+Coating selection
+Users must be able to select one or more coating types for an item.
+
+Examples: - Gold + Size - White + Gold + Size - LPVC + White - Silver +
+Black
+
+Display the selected coating combination clearly and consistently. Save
+the individual selected coating types and the display combination in the
+database. Do not store only an unstructured label if structured
+selections can be stored.
+
+Rules
+Every receiving transaction must have a Coating Batch Card Number.
+Link the transaction to the selected Job and Item.
+Record the selected sheet size, coating combination and side
+configuration.
+Quantity must be a positive number.
+Do not accept duplicate transaction submissions.
+Save the user, timestamp and transaction reference.
+A confirmed coating receipt increases Coated Sheet Stock for the
+relevant item and coating batch.
+Maintain a full receiving history.
+Do not allow silent edits to posted transactions. Use an audited
+correction/reversal process.
+7. ISSUING TO FACTORIES
+Create one Issuing to Factories module for issues from Coated Sheet
+Stock.
+
+Factory / Department dropdown
+Crown Line
+Plant 2
+Plant 3
+Printing Line
+Form fields
+Issue Date
+Job Name / Job Number
+Factory / Department
+Item Code
+Item Name (auto-populated)
+Sheet Size (auto-populated)
+Coating Combination (auto-populated)
+Side Configuration (auto-populated)
+Coating Batch Card Number
+Available Batch Stock (auto-populated)
+Issue Quantity
+Remarks
+Rules
+Select the relevant job, item and coating batch.
+Only show eligible coating batches with available stock for the
+selected job/item.
+Show available stock before issue.
+Do not allow issuing more than the available batch balance.
+Quantity must be positive.
+On confirmation, reduce the relevant Coated Sheet Stock balance.
+If issued to Printing Line, increase the corresponding Printing WIP
+balance and create/link the Printing Line issue record.
+If issued to Crown Line, Plant 2 or Plant 3, record a final factory
+issue and do not add it to Printing WIP.
+Keep factory-wise, job-wise, item-wise and coating-batch-wise issue
+history.
+Printing Line issues must be clearly distinguishable from other
+factory issues.
+Use an atomic database transaction so stock deduction and issue
+creation happen together.
+8. QUALITY RETURN -- ONLY FOR PRINTING LINE ISSUED SHEETS
+Create a Quality Return module ONLY for sheets issued to Printing Line.
+
+Do not allow Quality Returns for sheets issued to Crown Line, Plant 2 or
+Plant 3.
+
+Do not create a separate Quality Issue module. Do not create a Quality
+WIP stock category. Physical handover of sheets from Printing to the
+Quality Department is an operational activity only and must not create a
+software stock transaction.
+
+Quality Return form fields
+Return Date
+Job Name / Job Number (dropdown)
+Printing Batch Card Number (dropdown, only eligible Printing Line
+batches)
+Original Coating Batch Card Number (automatically populated)
+Item Code (automatically populated)
+Item Name (automatically populated)
+Sheet Size (automatically populated)
+Coating Combination (automatically populated)
+Printing Line Issue Quantity (automatically populated)
+Previously Approved Returned Quantity (automatically calculated)
+Pending Return Quantity (show separately)
+Outstanding Printing Quantity (automatically calculated)
+Good Quantity
+Rejected Quantity
+Total Returned Quantity (automatically calculated)
+UPS per Sheet (optional, if applicable)
+Good UPS (automatically calculated)
+Rejected UPS (automatically calculated)
+Remarks
+Quality Return calculations
+Total Returned Quantity = Good Quantity + Rejected Quantity.
+Outstanding Printing Quantity = Printing Line Issued Quantity −
+Previously Approved Returned Quantity.
+Pending Return Quantity must be displayed separately to prevent
+duplicate submissions.
+Available return quantity must account for approved and pending
+submissions.
+Good UPS = Good Quantity × UPS per Sheet.
+Rejected UPS = Rejected Quantity × UPS per Sheet.
+Total UPS = Good UPS + Rejected UPS.
+Validation
+Only Printing Line issues can be selected.
+Selecting a Printing Batch Card Number must automatically load its
+job, original coating batch, item, size, coating combination and
+issued quantity.
+Allow multiple partial returns for the same Printing Batch Card
+Number.
+Good and Rejected quantities must be zero or positive.
+Total Returned Quantity must be greater than zero.
+Total returned quantity must not exceed the remaining eligible
+quantity.
+Include other pending submissions in the quantity validation to
+prevent over-returning.
+Prevent duplicate submissions and concurrent transactions from
+exceeding the outstanding quantity.
+Validate all limits again in the database when submitting and
+approving.
+UPS fields are optional if UPS is not relevant to a particular item.
+If entered, validate that the values are consistent.
+Approval workflow
+Status values: - Draft - Submitted - Approved - Correction Required
+
+Workflow: 1. Quality Department user creates a draft. 2. Quality
+Department user submits the record. 3. Administrator reviews the
+submitted record. 4. Administrator either approves it or returns it for
+correction with a mandatory reason. 5. A corrected record can be
+resubmitted. 6. Quality users cannot approve their own submissions. 7.
+Only approved Quality Return records can change stock.
+
+Stock effects on approval
+When Administrator approves a Quality Return:
+
+Deduct Total Returned Quantity from the relevant Printing WIP
+balance for that Printing Batch Card Number.
+Add Good Quantity to Approved Good Printing Stock.
+Add Rejected Quantity to Rejected Printing Stock.
+Update the relevant batch-level balances.
+Update item-wise and job-wise summaries.
+Record approver, approval timestamp, approval reference and audit
+details.
+Do not change stock when a record is only Draft, Submitted or Correction
+Required.
+
+The approval operation must be atomic and must not apply twice if the
+user double-clicks or refreshes the page.
+
+Quality Return history table
+Display: - Return Date - Job Number / Job Name - Printing Batch Card
+Number - Original Coating Batch Card Number - Item Code - Good
+Quantity - Rejected Quantity - Total Returned Quantity - Good UPS -
+Rejected UPS - Status - Submitted By - Approved By
+
+Provide filters for job, printing batch card, item, date and status.
+
+9. COATING STOCK SUMMARY
+Create a dedicated Coating Stock Summary module.
+
+Item-wise summary
+Display each Item Code once.
+
+Columns: - Item Code - Item Name - Sheet Size - Total Received
+Quantity - Total Issued Quantity - Current Coating Stock - Active
+Coating Batch Count
+
+If an item code can have multiple sizes, coating combinations or side
+configurations, preserve the single item-level total but provide a clear
+specification breakdown in the drill-down. Never combine different
+specifications in a way that misrepresents stock.
+
+Coating batch-wise breakdown
+When the user clicks an item, display the batch-wise details:
+
+Job Name / Job Number
+Coating Batch Card Number
+Item Code
+Item Name
+Sheet Size
+Coating Combination
+Side Configuration
+Received Quantity
+Issued to Printing Line
+Issued to Crown Line
+Issued to Plant 2
+Issued to Plant 3
+Total Issued Quantity
+Remaining Balance
+Show a total row at the bottom.
+
+The summary must be calculated from actual receiving and issuing
+transactions, not manually entered balances.
+
+Provide search and filters by job, item, coating batch card, sheet size,
+coating combination and date.
+
+10. PRINTING STOCK
+Create a separate Printing Stock module. This module must show printing
+stock batch-wise using the Printing Batch Card Number.
+
+Printing batch-wise table
+Display: - Job Name / Job Number - Printing Batch Card Number - Original
+Coating Batch Card Number - Item Code - Item Name - Sheet Size - Coating
+Combination - Side Configuration - Printing Line Issued Quantity - Good
+Quantity Returned (approved) - Rejected Quantity Returned (approved) -
+Total Approved Returned Quantity - Outstanding Printing WIP - Approved
+Good Printing Stock - Rejected Printing Stock - Final Factory Issued
+Quantity - Remaining Good Printing Stock
+
+Allow users to click a Printing Batch Card Number to view its complete
+chronological transaction history.
+
+Only approved Quality Returns can reduce Printing WIP and increase
+Approved Good / Rejected stock.
+
+Do not include unapproved Quality Return quantities in available stock.
+Show pending quantities separately.
+
+11. FINAL FACTORY ISSUING FROM APPROVED PRINTING STOCK
+The Issuing to Factories module must also support issuing approved good
+printed sheets to: - Crown Line - Plant 2 - Plant 3
+
+These final issues must be distinguishable from issues of coated sheets
+to factories.
+
+For a final printing-stock issue: - Only Approved Good Printing Stock
+can be selected. - Do not allow issue of Printing WIP or Rejected
+Stock. - Select job, item and Printing Batch Card Number. - Display
+available approved good balance. - Validate issue quantity against
+available balance. - Deduct stock only after successful confirmation. -
+Record factory, date, user, batch and quantity. - Update Printing Stock
+and factory-wise reports.
+
+Use a clear issue type field such as: - Coated Sheet Issue - Approved
+Printed Sheet Issue
+
+Printing Line must only be available for Coated Sheet Issue, not final
+approved printed stock issue.
+
+12. JOB-WISE REPORTING
+All modules must be linked through Job Name / Job Number.
+
+Users must be able to select a job and see:
+
+Total Coating Received
+Current Coating Stock
+Coating Batch Card Details
+Total Issued to Printing Line
+Total Issued to Other Factories
+Printing Batch Card Details
+Good Quality Returns
+Rejected Quality Returns
+Total Approved Returned Quantity
+Current Printing WIP
+Approved Printing Stock
+Rejected Printing Stock
+Final Factory Issues
+Remaining Stock
+Provide a complete chronological transaction history for each job.
+
+A job may have multiple coating batch cards and multiple printing batch
+cards. Preserve the relationships between job, coating batch, printing
+issue and printing batch card. Do not assume one job has only one batch.
+
+13. BATCH CARD TRACKING AND SEARCH
+Use: - Job Number as the job-level reference. - Coating Batch Card
+Number as the coating receipt and coated-stock reference. - Printing
+Batch Card Number as the primary reference for Printing WIP and Quality
+Return.
+
+The Printing Batch Card Number must link back to its original Coating
+Batch Card Number and Job Number.
+
+Provide global search for: - Job Number / Job Name - Item Code - Coating
+Batch Card Number - Printing Batch Card Number
+
+When a user searches a Printing Batch Card Number, show its complete
+chronological history: 1. Related job 2. Original coating batch 3.
+Coating receiving 4. Issue to Printing Line 5. Quality Return
+submissions 6. Quality Return approvals 7. Good stock created 8.
+Rejected stock created 9. Final factory issues 10. Current balances
+
+14. REPORTS AND EXPORTS
+Provide report views and filters for: - Overall Stock Summary - Job-wise
+Stock Summary - Item-wise Stock Summary - Item-wise Batch Breakdown -
+Coating Stock Summary - Coating Batch Card Report - Coated Sheet Issue
+Report - Factory-wise Issue Report - Printing Stock Summary - Printing
+Batch Card Report - Printing WIP Report - Quality Return Report -
+Pending Quality Approval Report - Good vs Rejected Report - Rejected
+Stock Report - Approved Printing Stock Report - Final Factory Issue
+Report - Complete Batch History - Stock Reconciliation Report - Daily
+Report - Weekly Report - Monthly Report - Custom Date Range Report
+
+Allow export to: - Excel - PDF - Print-friendly view
+
+Exports must respect active filters and permissions. Include report
+title, company name, generated date/time, filters and totals.
+
+15. STOCK ACCOUNTING RULES AND RECONCILIATION
+Maintain these stock buckets separately:
+
+Coated Sheet Stock
+Printing WIP
+Approved Good Printing Stock
+Rejected Printing Stock
+Stock movement rules:
+
+A. Coating Receiving: - Increase Coated Sheet Stock for the selected
+item and Coating Batch Card Number.
+
+B. Issue from Coating Stock to Printing Line: - Decrease Coated Sheet
+Stock. - Increase Printing WIP for the corresponding Printing Batch Card
+Number / issue reference.
+
+C. Issue from Coating Stock to Crown Line, Plant 2 or Plant 3: -
+Decrease Coated Sheet Stock. - Record a final coated-sheet factory
+issue. - Do not increase Printing WIP.
+
+D. Physical handover from Printing to Quality: - No software
+transaction. - No stock movement. - Do not create Quality WIP.
+
+E. Approved Quality Return: - Decrease Printing WIP by Good Quantity +
+Rejected Quantity. - Increase Approved Good Printing Stock by Good
+Quantity. - Increase Rejected Printing Stock by Rejected Quantity.
+
+F. Final issue of approved printed sheets: - Decrease Approved Good
+Printing Stock. - Record the destination factory.
+
+Important: - Do not reduce Printing WIP when sheets are physically
+handed to Quality. - Reduce Printing WIP only when the corresponding
+Quality Return is approved. - Pending Quality Returns must not change
+stock. - Rejected Stock must never be included in Approved Good Printing
+Stock. - Do not allow negative stock. - Do not count the same sheets in
+more than one stock bucket.
+
+For every batch, calculate balances from posted/approved transactions.
+
+Provide reconciliation checks so that: - Coating batch balance =
+received quantity − all confirmed issues from that coating batch. -
+Printing WIP balance = Printing Line issued quantity − approved Quality
+Return quantity. - Approved Good Printing Stock balance = approved Good
+quantity − final approved-printing-stock factory issues. - Rejected
+Printing Stock balance = approved rejected quantity − any separately
+authorized rejected-stock disposition, if such a process is implemented
+later.
+
+Do not invent a rejected-stock disposal workflow now. Keep rejected
+stock separately visible and do not allow it to be issued as good stock.
+
+If printing process loss or any other adjustment is required in future,
+implement it only as a separately authorized, auditable transaction. Do
+not silently subtract it from stock.
+
+Show reconciliation warnings when balances do not match the underlying
+transaction ledger.
+
+16. AUDIT LOG AND DATA INTEGRITY
+Maintain an audit log for: - User login and relevant account actions -
+Master data changes - Coating receiving - Coated sheet issues - Quality
+Return creation and submission - Quality Return approval or correction
+request - Final factory issues - Corrections and reversals - Settings
+and permission changes
+
+Audit fields: - User - Action - Module - Record reference - Previous
+value where relevant - New value where relevant - Reason - Date and time
+
+Never silently overwrite or delete approved transaction history. Use
+correction/reversal entries with mandatory reasons and preserve the
+original record.
+
+Use database constraints, secure functions and transactions to
+prevent: - Negative balances - Over-issuing - Over-returning - Duplicate
+approval - Duplicate transaction submission - Unauthorized stock
+changes - Concurrent requests creating invalid balances
+
+17. USER EXPERIENCE
+Every module should include: - Clear page title and short description -
+Search - Filters - Pagination for large tables - Add / View / Edit
+actions according to role - Confirmation dialogs for important
+transactions - Clear success and error messages - Loading states - Empty
+states - Form validation - Responsive layout
+
+Use dropdowns populated from Master Data. Automatically populate linked
+information when a user selects a job, item or batch.
+
+Use consistent date and quantity formatting. Display quantities with
+thousands separators.
+
+18. INITIAL DATA AND DEPLOYMENT
+Do not insert fake transactions, sample stock balances or invented job
+records.
+
+The application may include the predefined master dropdown options
+described in this prompt, but all actual stock and job data must be
+entered by authorized users.
+
+Prepare: - Supabase database schema and migrations - Authentication
+setup - RLS policies - Secure database functions for stock posting and
+Quality Return approval - Environment variable instructions - README
+with setup and deployment steps - GitHub-ready project structure -
+Production build configuration
+
+Target a free or low-cost deployment where available, such as Google AI
+Studio / Cloud Run or another compatible hosting platform, with Supabase
+for the database and authentication. Clearly explain free-tier limits,
+project pausing, backups and any possible charges. Never claim that free
+hosting guarantees unlimited usage or business-grade uptime.
+
+19. IMPLEMENTATION PLAN
+Build the application in manageable phases, but keep the complete
+requirements and database design in mind from the beginning.
+
+Phase 1: - Project setup - Supabase connection - Authentication - Roles
+and RLS - Master Data - Sidebar and layout
+
+Phase 2: - Coating Receiving - Coated Stock ledger - Coating Stock
+Summary - Coating batch breakdown
+
+Phase 3: - Issuing to Factories - Printing Line issue tracking -
+Printing WIP ledger
+
+Phase 4: - Quality Return - Partial returns - Approval workflow -
+Approved Good and Rejected stock
+
+Phase 5: - Final factory issues from approved printing stock - Printing
+Stock batch-wise summary - Job-wise reports - Batch history
+
+Phase 6: - Dashboard KPI cards and graphs - Excel/PDF exports - Audit
+logs - Reconciliation - Responsive design and testing
+
+At the end of each phase: - Run the application. - Check
+TypeScript/build errors. - Test database operations. - Verify RLS
+permissions. - Test stock calculations with controlled test records. -
+Do not proceed while critical errors remain.
+
+20. FINAL ACCEPTANCE TESTS
+The application is not complete until all of these tests pass:
+
+Administrator can create and manage Jobs and Items.
+Coating Receiving saves a batch with one or multiple coating types
+and a Single/Double side configuration.
+Coating receipt increases the correct batch stock.
+Issuing to Printing Line decreases the correct coating batch and
+increases Printing WIP.
+Issuing to Crown Line, Plant 2 or Plant 3 decreases coating stock
+and does not increase Printing WIP.
+Quality Return can select only Printing Line issues.
+Quality Return cannot exceed the outstanding quantity, including
+pending submissions.
+Draft, Submitted and Correction Required records do not change
+stock.
+Approved Quality Return decreases Printing WIP and increases Good
+and Rejected stock correctly.
+A Quality user cannot approve their own submission.
+Final factory issue can use only Approved Good Printing Stock.
+Final factory issue reduces approved good stock correctly.
+Rejected Stock is never available for good-stock issue.
+Item-wise summaries reconcile with batch-wise details.
+Job-wise summaries reconcile with all related transactions.
+Dashboard figures reconcile with the stock ledgers.
+Viewer cannot make changes through either the UI or direct database
+requests.
+Duplicate submissions and double approvals cannot apply stock
+changes twice.
+Two users issuing or approving at the same time cannot create
+negative or inconsistent stock.
+Audit logs record all important operations.
+Build a reliable, understandable and maintainable stock management
+system. Accuracy of stock balances, traceability by job and batch, and
+secure role permissions are more important than decorative design.
+
+
+
+
+
+⋮⋮⋮⋮⋮⋮⋮⋮⋮⋮⋮⋮
