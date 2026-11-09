@@ -1,0 +1,20 @@
+# ==============================================================================
+# UNIMAK WIP STOCK MANAGEMENT SYSTEM
+# Company: Unimak (Pvt) Ltd - Metal Packaging Manufacturing
+# Python Dependencies for Supabase DB Admin, Data Migration & Automated Backups
+# ==============================================================================
+# Note: The web application itself runs on Node.js / React / TypeScript / Vite
+# (defined in package.json). This requirements.txt provides the Python environment
+# for backend administration scripts, automated database backups, and ERP integration.
+
+supabase>=2.3.0
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.1
+pandas>=2.2.0
+openpyxl>=3.1.2
+xlsxwriter>=3.1.9
+reportlab>=4.1.0
+requests>=2.31.0
+pydantic>=2.6.0
+rich>=13.7.0
+tabulate>=0.9.0
